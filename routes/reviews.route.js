@@ -5,6 +5,11 @@ const router = express.Router()
 
 router.route('/new').post(ReviewsControler.postReview)
 router.route('/movie/:id').get(ReviewsControler.getReviewsByMovieId)
-router.route('/:id').get(ReviewsControler.getReview)
+router
+  .route('/:id')
+  .get(ReviewsControler.getReview)
+  .patch(ReviewsControler.updateReview)
+  .delete(ReviewsControler.deleteReview)
+//.put(ReviewsControler.updateReview)
 
 export default router

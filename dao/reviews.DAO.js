@@ -71,7 +71,42 @@ export default class ReviewsDAO {
       return await reviews.insertOne(reviewDocument)
     } catch (error) {
       console.log('Unable to post review', error)
-      return { error }
+      return { error, status: 'error', message: 'Unable to post review' }
+    }
+  }
+
+  static async deleteReview(reviewId) {
+    console.log('dao reviewid', reviewId)
+    try {
+      const deleteReviewResponse = await reviews.deleteOne({
+        _id: ObjectId(reviewId),
+      })
+      console.log('removing review, deleteReviewResponse:', deleteReviewResponse)
+      return deleteReviewResponse
+    } catch (error) {
+      console.log('Unable to delete review', error)
+      return { error, status: 'error', message: 'Unable to delete review' }
+    }
+  }
+
+  static async updateReview(reviewId, review, user) {
+    try {
+      const reviewUpdateResponse = await reviews.updateOne(
+        { _id: ObjectId(reviewId) },
+        { $set: { user: user, review: review } }
+      )
+      console.log(
+        'updating review',
+        'reviewUpdateResponse',
+        reviewUpdateResponse,
+        user,
+        review,
+        reviewId
+      )
+      return reviewUpdateResponse
+    } catch (error) {
+      console.log('Unable to update review', error)
+      return { error, status: 'error', message: 'Unable to update review' }
     }
   }
 
@@ -80,7 +115,7 @@ export default class ReviewsDAO {
       return await reviews.findOne({ _id: new ObjectId(reviewId) })
     } catch (error) {
       console.log('Unable to get review:', error)
-      return { error }
+      return { error, status: 'error', message: 'Unable to get review' }
     }
   }
 
@@ -92,7 +127,7 @@ export default class ReviewsDAO {
       return cursor.toArray()
     } catch (error) {
       console.log('Unable to get review', error)
-      return { error }
+      return { error, status: 'error', message: 'Unable to get reviews by movie id' }
     }
   }
 }
